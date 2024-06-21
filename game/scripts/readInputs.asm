@@ -1,3 +1,4 @@
+%include "../game/scripts/incs/renderUtilities.inc"
 segment code
  global read_inputs
 extern draw_pixel
@@ -23,9 +24,9 @@ mov ah, 01h         ; Check for key press function
     ; Check if the character was a carriage return
     cmp byte [buffer],  0x61
     jne test_another_inputs  ; If not CR, continue reading characters
+    DRAW_PIXEL 150, 100, 4
     push inputSuccessA
     call print_message
-    call draw_pixel
     ret
 end_inputs:
 ret

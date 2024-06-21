@@ -10,8 +10,6 @@ init_timer:
   je timer_success
     ret
  timer_loop:
-
-
     ret
 timer_success:
 push timerSuccess
