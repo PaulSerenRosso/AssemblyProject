@@ -1,6 +1,9 @@
 
 %macro PRINT_STRING 1
     pusha
+
+    mov ax, 0
+    mov dx,0
     mov dx, %1
     mov ah,9 
     int 0x21
@@ -8,11 +11,13 @@
 %endmacro
 
 %macro SET_CURSOR 2
+    pusha
     mov ah, 0x02
     mov bh, 0x00
     mov dh, %1
     mov dl, %2
     int 0x10
+    popa
 %endmacro
 
 %macro PRINT_DEBUG_STRING 1
@@ -23,6 +28,7 @@ PRINT_STRING %1
 
 %macro DRAW_PIXEL 3
     pusha
+    
     mov ax, 0A000h      ; Segment of video memory (0xA000)
     mov es, ax          ; Set ES to video memory segment
     mov ax, 320         ; Width of the screen in pixels
@@ -32,7 +38,6 @@ PRINT_STRING %1
     
     mov di, ax          ; DI = offset into video memory
     mov dl, %3           ; Color index (assuming 256-color mode)
-    mov [es:di], dx     ; Store color index at ES:DI (video memory)
-    int 10h             ; Call BIOS video services to display pixel
+    mov [es:di], dl     ; Store color index at ES:DI (video memory)
     popa
 %endmacro

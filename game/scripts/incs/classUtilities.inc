@@ -1,0 +1,2 @@
+%define ENTITY_SIZE 4
+%define PLAYER_SIZE 6

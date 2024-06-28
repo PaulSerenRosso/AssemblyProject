@@ -1,0 +1,14 @@
+SEGMENT code PUBLIC USE16 BYTE ''
+  at 00000000, length 000001D3
+SEGMENT data PUBLIC USE16 BYTE ''
+  at 000001E0, length 0000006F
+SEGMENT bss PUBLIC USE16 BYTE ''
+  at 00000250, length 0000000C
+SEGMENT stack STACK USE16 BYTE ''
+  at 00000260, length 00000040
+
+publics:
+createForLoop at code:000000F8
+drawSquare at code:00000117
+entityConstructor at code:00000000
+initGame at code:0000007B

@@ -1,38 +1,95 @@
 %include "../game/scripts/incs/renderUtilities.inc"
 segment code
-global draw_square
-;draw_square:
-;push bp
-;mov bp, sp 
-;sub sp, 8
-;mov [bp-2], [bp+4]
-;mov [bp-4], [bp+6]
-;sub [bp-4], 1
-;mov [bp-8], -1
-;call draw_square_init_loop
+extern createForLoop
+global drawSquare
+drawSquare:
+push bp
+push ax
+push bx
+push ds
+mov ax, bss
+mov ds, ax
+mov bp, sp
+mov ax, [bp+10]
+mov [currentColor], ax
+mov ax, [bp+12]
+mov [currentPositionY], ax
+mov ax, [bp+14]
+mov  [currentPositionX], ax
+mov ax, [bp+16]
+mov [currentHeight], ax
+ xor dx, dx  ;
+mov bx, 2
+div bx
+sub word [currentPositionY], ax
+mov ax, [bp+16]
+mov [currentWidth], ax
+div bx
+sub word [currentPositionX] ,ax
+push drawSquareLoopY
+mov ax, [currentHeight]
+push ax
+call createForLoop
+pop ds
+pop bx
+pop ax
+pop bp
+ret 8
+test :
 
-;draw_square_init_loop:
+mov ax, data
+mov ds, ax
+PRINT_STRING babybel3
+pop bx
+pop ax
+pop bp
+ret 8
 
-;mov [bp-6], 0
-;add [bp-8], 1
-;cmp [bp-8], 3
-;je draw_square_end
+drawSquareLoopY:
+push ax
+mov ax, [currentPositionY]
+cmp ax, 199
+jg cancelDrawSquareLoopY
+cmp ax, 0
+jl cancelDrawSquareLoopY
+push drawSquareLoopX
+mov ax, [currentWidth]
+push ax
+call createForLoop
 
-;draw_square_loop:
+add word [currentPositionY],1
 
+pop ax
+ret
 
+drawSquareLoopX:
+push cx
+mov cx, [currentPositionX]
+add cx, bx
+cmp cx, 319
+jg cancelDrawSquareLoopX
+cmp cx, 0
+jl cancelDrawSquareLoopX
+DRAW_PIXEL cx, [currentPositionY], [currentColor]
+pop cx
+ret 
 
+cancelDrawSquareLoopX:
+pop cx
+ret
 
-;cmp [bp-6], 3
-;je draw_square_init_loop
-;add [bp-6], 1
+cancelDrawSquareLoopY:
+add word [currentPositionY],1
+pop ax
+ret
 
-
-
-;jmp draw_square_loop
-;draw_square_end:
-
-
-;add sp, 8
-;pop bp
-;ret 6
+segment bss
+currentPositionX: resw 1
+currentPositionY: resw 1
+currentColor: resw 1
+currentHeight : resw 1
+currentWidth : resw 1
+segment data
+babybel: db "Loop Renderer X", 13, 10, '$'
+babybel2: db "Loop Renderer Y", 13, 10, '$'
+babybel3: db "fdqjslfkjq", 13, 10, '$'
